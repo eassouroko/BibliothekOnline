@@ -1,7 +1,9 @@
 package com.library.models;
 
+import java.io.Serializable;
 import java.sql.Date;
-import java.util.Set;
+import java.util.ArrayList;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,15 +13,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;  
-import javax.persistence.JoinTable;  
 
-
+//import javax.persistence.JoinColumn;  
+//import javax.persistence.JoinTable;  
 
 
 @Entity
 @Table(name = "book")
-public class Book {
+public class Book{
+	/**
+	 * 
+	 */
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int bookId;
@@ -28,8 +33,10 @@ public class Book {
 
 	@Column(name = "book_publication_date")
 	private Date publicationDate;
-	private Set<Author> authors;
-	private Set<User> users;
+	@ManyToMany(mappedBy = "books")
+	private ArrayList<Author> authors;
+
+	
 	
 
 	public Book() {
@@ -43,32 +50,19 @@ public class Book {
 		this.publicationDate = publicationDate;
 	}
 	
-	@ManyToMany(cascade=CascadeType.ALL)  
-    @JoinTable(name="author_book", joinColumns=@JoinColumn(name="book_id"), inverseJoinColumns=@JoinColumn(name="author_id"))  
 	
 	
-    
-	public Set<Author> getAuthors() {
+	public ArrayList<Author> getAuthors() {
 		return authors;
 	}
 
 
-	public void setAuthors(Set<Author> authors) {
+	public void setAuthors( ArrayList<Author> authors) {
 		this.authors = authors;
 	}
-	@ManyToMany(cascade=CascadeType.ALL)  
-    @JoinTable(name="user_book", joinColumns=@JoinColumn(name="book_id"), inverseJoinColumns=@JoinColumn(name="user_id"))
 	
-	public Set<User> getUsers(){
-		
-		return users;
-	}
 	
-	public void setUsers(Set<User> users) {
-		this.users=users;
-	}
 	
-
 	public int getBookId() {
 		return bookId;
 	}

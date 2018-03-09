@@ -1,5 +1,7 @@
 package com.library.models;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.ArrayList;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -7,12 +9,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "author")
-public class Author {
+public class Author{
+	/**
+	 * 
+	 */
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -22,7 +30,17 @@ public class Author {
 	@Column(name = "author_email")
 	private String mail;
 
-	private Set<Book> books;  
+	@ManyToMany(cascade = { 
+	        CascadeType.PERSIST, 
+	        CascadeType.MERGE
+	    })
+	    @JoinTable(name = "post_tag",
+	        joinColumns = @JoinColumn(name = "author_id"),
+	        inverseJoinColumns = @JoinColumn(name = "book_id")
+	    )
+	
+	private ArrayList<Book> books; 
+	
 	public Author() {
 		super();
 	}
@@ -34,11 +52,11 @@ public class Author {
 		
 		this.mail = mail;
 	}
-	@ManyToMany(cascade=CascadeType.ALL, mappedBy="authors")  
-    public Set<Book> getBooks()  {
+	  
+    public ArrayList<Book> getBooks()  {
 		return books;
 	}
-	 public void setBooks(Set<Book> books)  
+	 public void setBooks(ArrayList<Book> books)  
 	    {  
 	        this.books = books;  
 	    }  
@@ -62,5 +80,7 @@ public class Author {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	
+	public String toString() {
+		return "Author Name:"+name;
+	}
 }
