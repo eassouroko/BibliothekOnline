@@ -1,7 +1,7 @@
 package com.library.models;
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,32 +14,39 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.mapping.List;
+import org.hibernate.mapping.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Entity
-@Table(name = "author")
-public class Author{
+//@Table(name="Author")
+public class Author implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 
 	 */
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private int authorId;
 	@Column(name = "author_name")
 	private String name;
 	
 	@Column(name = "author_email")
 	private String mail;
 
-	@ManyToMany(cascade = { 
-	        CascadeType.PERSIST, 
-	        CascadeType.MERGE
-	    })
-	    @JoinTable(name = "post_tag",
-	        joinColumns = @JoinColumn(name = "author_id"),
-	        inverseJoinColumns = @JoinColumn(name = "book_id")
+	@ManyToMany(cascade= CascadeType.ALL)
+	    @JoinTable(name = "Author_has_Book",
+	        joinColumns = @JoinColumn(name = "authorId"),
+	        inverseJoinColumns = @JoinColumn(name = "bookId")
 	    )
-	
-	private ArrayList<Book> books; 
+
+
+
+	private java.util.Set<Book> books;	
 	
 	public Author() {
 		super();
@@ -51,22 +58,16 @@ public class Author{
 		this.name = name;
 		
 		this.mail = mail;
+		books=new TreeSet<Book>();
+		
 	}
 	  
-    public ArrayList<Book> getBooks()  {
-		return books;
-	}
-	 public void setBooks(ArrayList<Book> books)  
-	    {  
-	        this.books = books;  
-	    }  
+ 
 
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	
+
+
+	
 	public String getName() {
 		return name;
 	}

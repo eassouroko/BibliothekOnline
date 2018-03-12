@@ -3,7 +3,8 @@ package com.library.models;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
-
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,16 +12,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-//import javax.persistence.JoinColumn;  
-//import javax.persistence.JoinTable;  
+import org.hibernate.mapping.List;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.JoinColumn;  
+import javax.persistence.JoinTable;  
 
 
 @Entity
-@Table(name = "book")
-public class Book{
+//@Table(name="Book")
+public class Book implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 
 	 */
@@ -31,12 +40,10 @@ public class Book{
 	@Column(name = "book_title")
 	private String titel;
 
-	@Column(name = "book_publication_date")
-	private Date publicationDate;
-	@ManyToMany(mappedBy = "books")
-	private ArrayList<Author> authors;
 
-	
+	@ManyToMany( mappedBy = "authors",targetEntity =com.library.models.Author.class)
+	private java.util.Set<Author> authors=new TreeSet<Author>();
+	       
 	
 
 	public Book() {
@@ -47,17 +54,19 @@ public class Book{
 	public Book(String titel, Date publicationDate) {
 		super();
 		this.titel = titel;
-		this.publicationDate = publicationDate;
+		//authors=new TreeSet<Author>();
+		
+		//this.publicationDate = publicationDate;
 	}
 	
 	
 	
-	public ArrayList<Author> getAuthors() {
+	public Set<Author> getAuthors() {
 		return authors;
 	}
 
 
-	public void setAuthors( ArrayList<Author> authors) {
+	public void setAuthors( TreeSet<Author> authors) {
 		this.authors = authors;
 	}
 	
@@ -76,15 +85,7 @@ public class Book{
 		this.titel = titel;
 	}
 
-	public Date getPublicationDate() {
-		return publicationDate;
-	}
-
-	public void setPublicationDate(Date publicationDate) {
-		this.publicationDate = publicationDate;
-	}
-
-
+	
 	
 	
 	public String toString() {

@@ -1,41 +1,43 @@
 package com.library.LibraryOnline;
 
 
-import java.sql.Date;
-import java.util.ArrayList;
 
-
-//import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.library.models.*;
 import com.library.services.AuthorRepository;
+
 import com.library.services.BookRepository;
 
 
+
 @SpringBootApplication
+@EnableJpaRepositories("com.library.services")
 @ComponentScan("com.library")
+@EntityScan("com.library.models")
 public class LibraryOnlineApplication implements CommandLineRunner {
 	
 	
 	@Autowired
-	AuthorRepository authorRepository;
-	@Autowired
 	BookRepository bookRepository;
+	@Autowired
+	AuthorRepository authorRepository;
 	
- 
 
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryOnlineApplication.class, args);
 	}
 	
 	@Override
-	//@Transactional
+	@Transactional
 	public void run(String... arg0) throws Exception {
 		//Adding a book and its author or authors
 		System.out.println("===================Adding object to DB:==================");
@@ -43,10 +45,10 @@ public class LibraryOnlineApplication implements CommandLineRunner {
 		
 		book1.setTitel("Book1");
 		
-		book1.setPublicationDate(Date.valueOf("2000-11-01"));
+		//book1.setPublicationDate(Date.valueOf("2000-11-01"));
 		Book book2= new Book();
 		book2.setTitel("Book2");
-		book2.setPublicationDate(Date.valueOf("1999-05-22"));
+		//book2.setPublicationDate(Date.valueOf("1999-05-22"));
 		System.out.println("+++++++++++++++++++++");
 		System.out.println(book1.getTitel()+" "+book2.getTitel());
 		System.out.println("+++++++++++++++++++++");
@@ -63,44 +65,16 @@ public class LibraryOnlineApplication implements CommandLineRunner {
 		peter.setName("Peter Great");
 		peter.setMail("great@united.net");
 		System.out.println("++++++++++HIER KOMMT PETER+++++++++++"+ peter.toString());
-		// ArrayList<Author> authorsBook1 = new  ArrayList<Author>();
-		//authorsBook1.add(jack);
-		//authorsBook1.add(peter);
-	//	System.out.println("++++++++++Number of author+++++++++++"+ authorsBook1.size());
-//		book1.setAuthors(authorsBook1);
-		  System.out.println("++++++++++Saved book+++++++++++ "+ book1.getTitel());
+		book1.getAuthors().add(peter);
+		book1.getAuthors().add(jack);
+		
+		System.out.println("++++++++++Saved book+++++++++++ "+ book1.getTitel());
 		bookRepository.save(book1);
-     //   System.out.println("++++++++++Number of author+++++++++++"+ book1.getAuthors().size());
+        System.out.println("++++++++++Number of author+++++++++++"+ book1.getAuthors().size());
 		
+		book2.getAuthors().add(jack);
 		
-//		ArrayList<Author> authorsBook2 = new  ArrayList<Author>();
-//		authorsBook2.add(jack);
-//		book2.setAuthors(authorsBook2);
-//		bookRepository.save(book2);
-//		
-//		 ArrayList<Book> booksofAuthor =new  ArrayList<Book>();
-//		booksofAuthor.add(book1);
-//		booksofAuthor.add(book2);
-//		jack.setBooks(booksofAuthor);
-//		authorRepository.save(jack);
-//		booksofAuthor =new  ArrayList<Book>();
-//		booksofAuthor.add(book1);
-//		peter.setBooks(booksofAuthor);
-//		authorRepository.save(peter);
-		
-		
-		
-//		List<Book> bookLst = bookRepository.findAll();
-//		List<Author> authorLst = authorRepository.findAll();
-//		
-//		System.out.println(bookLst.size());
-//		System.out.println(authorLst.size());
-//		
-//		
-//		System.out.println("===================Students info:==================");
-//		bookLst.forEach(student->System.out.println(student.toString()));
-//		
-//		System.out.println("===================Students info:==================");
-//		authorLst.forEach(subject->System.out.println(subject.toString()));
+		bookRepository.save(book2);
+
 	}
 }
